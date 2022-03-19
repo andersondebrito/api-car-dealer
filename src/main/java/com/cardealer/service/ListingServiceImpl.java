@@ -1,6 +1,5 @@
 package com.cardealer.service;
 
-import com.cardealer.model.Dealer;
 import com.cardealer.model.Listing;
 import com.cardealer.model.State;
 import com.cardealer.repository.DealerRepository;
@@ -21,12 +20,12 @@ public class ListingServiceImpl implements ListingService{
     }
 
     @Override
-    public void create(Dealer dealer) {
+    public void create(Listing listing) {
 
     }
 
     @Override
-    public Listing update(Dealer dealer) {
+    public Listing update(Listing listing) {
         return null;
     }
 
@@ -36,12 +35,12 @@ public class ListingServiceImpl implements ListingService{
     }
 
     @Override
-    public List<Listing> publishListing(Dealer dealer) {
+    public List<Listing> publishListing(Listing listing) {
         return null;
     }
 
     @Override
-    public void unPublishListing(Dealer dealer) {
+    public void unPublishListing(Listing listing) {
 
     }
 }

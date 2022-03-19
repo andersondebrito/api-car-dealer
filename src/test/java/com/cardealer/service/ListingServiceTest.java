@@ -1,14 +1,20 @@
 package com.cardealer.service;
 
+import com.cardealer.model.Listing;
+import com.cardealer.model.State;
 import com.cardealer.repository.DealerRepository;
 import com.cardealer.repository.ListingRepository;
-import org.junit.Before;
-import org.junit.jupiter.api.Test;
+import org.jeasy.random.EasyRandom;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ListingServiceTest {
@@ -19,40 +25,40 @@ public class ListingServiceTest {
     @Mock
     private ListingRepository listingRepository;
 
-    @InjectMocks
-    ListingService listingService;
+    @Mock
+    private ListingServiceImpl listingService;
+
+    EasyRandom generator = new EasyRandom();
 
 
+    @Test
+    public void testGetAllListingOfDealer() {
+        List<Listing> list = generator.objects(Listing.class, 5)
+                .collect(Collectors.toList());
 
-    @Before
-    void init() {
-        MockitoAnnotations.initMocks(this);
-        listingService = new ListingServiceImpl(dealerRepository,listingRepository);
+        when(listingService.getAllListingOfDealer(1,State.DRAFT)).thenReturn(list);
+
+        List<Listing> listingList = listingService.getAllListingOfDealer(1, State.DRAFT);
+        assertEquals(5,listingList.size());
+    }
+
+    @Test
+    public void createTest() {
 
     }
 
     @Test
-    void testGetAllListingOfDealer() {
+    public void updateTest(){
 
     }
 
     @Test
-    void createTest() {
+    public void publishListingTest(){
 
     }
 
     @Test
-    void updateTest(){
-
-    }
-
-    @Test
-    void publishListingTest(){
-
-    }
-
-    @Test
-    void unPublishListingTest() {
+    public void unPublishListingTest() {
         
     }
 }
