@@ -1,17 +1,17 @@
 package com.cardealer.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.List;
 
 @Entity
 public class Dealer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_dealer", nullable = false)
-    private UUID id;
+    private Integer id;
 
     @Column(name = "nome", nullable = false)
     private String nome;
@@ -19,14 +19,15 @@ public class Dealer {
     @Column(name = "tier_limit", nullable = false)
     private int tierLimit;
 
-    @OneToMany(mappedBy = "dealer", cascade = CascadeType.ALL)
-    private Set<Listing> cars = new HashSet<>();
+    @JsonBackReference
+    @OneToMany(mappedBy = "dealer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Listing> listings;
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -46,11 +47,11 @@ public class Dealer {
         this.tierLimit = tierLimit;
     }
 
-    public Set<Listing> getCars() {
-        return cars;
+    public List<Listing> getListings() {
+        return listings;
     }
 
-    public void setCars(Set<Listing> cars) {
-        this.cars = cars;
+    public void setListings(List<Listing> cars) {
+        this.listings = cars;
     }
 }

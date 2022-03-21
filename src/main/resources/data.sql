@@ -1,4 +1,4 @@
-INSERT INTO DEALER (id_dealer,nome,tierLimit) VALUES
+INSERT INTO DEALER (id_dealer,nome,tier_limit) VALUES
   (1, 'Anderson', 5),
   (2, 'Brito', 1),
   (3, 'Oliveira', 4);

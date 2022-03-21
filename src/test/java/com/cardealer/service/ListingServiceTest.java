@@ -1,9 +1,9 @@
 package com.cardealer.service;
 
+import com.cardealer.exception.TierLimitException;
+import com.cardealer.model.Dealer;
 import com.cardealer.model.Listing;
 import com.cardealer.model.State;
-import com.cardealer.repository.DealerRepository;
-import com.cardealer.repository.ListingRepository;
 import org.jeasy.random.EasyRandom;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,17 +13,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ListingServiceTest {
-
-    @Mock
-    private DealerRepository dealerRepository;
-
-    @Mock
-    private ListingRepository listingRepository;
 
     @Mock
     private ListingServiceImpl listingService;
@@ -43,22 +38,49 @@ public class ListingServiceTest {
     }
 
     @Test
-    public void createTest() {
+    public void verifyTieLimitTest(){
+        List<Listing> list = generator.objects(Listing.class, 2)
+                .collect(Collectors.toList());
+        list.forEach(listing -> listing.setState(State.PUBLISHED));
 
+        Dealer dealer = new Dealer();
+        dealer.setId(1);
+        dealer.setTierLimit(2);
+        dealer.setNome("Test");
+
+        assertTrue(list.size() <= dealer.getTierLimit());
     }
 
     @Test
-    public void updateTest(){
+    public void verifyTieLimitTestFail(){
+        List<Listing> list = generator.objects(Listing.class, 3)
+                .collect(Collectors.toList());
+        list.forEach(listing -> listing.setState(State.PUBLISHED));
 
+        Dealer dealer = new Dealer();
+        dealer.setId(1);
+        dealer.setTierLimit(2);
+        dealer.setNome("Test");
+
+        assertFalse(list.size() <= dealer.getTierLimit());
     }
 
-    @Test
-    public void publishListingTest(){
+    @Test(expected = TierLimitException.class)
+    public void testTierLimitException() {
 
+        List<Listing> list = generator.objects(Listing.class, 3)
+                .collect(Collectors.toList());
+        list.forEach(listing -> listing.setState(State.PUBLISHED));
+
+        Dealer dealer = new Dealer();
+        dealer.setId(1);
+        dealer.setTierLimit(2);
+        dealer.setNome("Test");
+        dealer.setListings(list);
+
+        doThrow(new TierLimitException("test")).when(listingService).verifyTieLimit(dealer.getId());
+
+        listingService.verifyTieLimit(dealer.getId());
     }
 
-    @Test
-    public void unPublishListingTest() {
-        
-    }
 }
